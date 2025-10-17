@@ -29,8 +29,5 @@ The scripts save the following files to the working directory:
 Adjust setwd() at the top of the scripts to change output locations.
 
 ⸻
+<img width="2400" height="3600" alt="Figure 4" src="https://github.com/user-attachments/assets/1ce91b40-08e9-4b28-bfc5-8ed38732935b" />
 
-## Parameters & computational notes
-	•	The code is designed to run large experiments (the author used N = 100000 in examples). Such runs require substantial RAM and can be time‑consuming — expect heavy graph computations and neighbourhood searches.
-	•	For exploratory work, reduce N (e.g. to 1,000–10,000) to speed up iteration.
-	•	Consider increasing R memory limits on Windows (memory.limit()), using a machine with >16 GB RAM for `
