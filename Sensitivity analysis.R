@@ -15,7 +15,7 @@ library(patchwork)
 # PARAMETERS
 # ----------------------------
 set.seed(123)
-N <- 100000
+N <- 10000
 N_half <- N / 2
 sw_nei <- 2
 sw_p <- 0.1
@@ -150,40 +150,62 @@ for(fname in names(fert_funcs)){
 # ----------------------------
 # PLOTTING
 # ----------------------------
-plot_list<-list()
-for(fname in names(all_results)){
-  agg<-all_results[[fname]]$agg
-  fert_fun<-fert_funcs[[fname]]
-  micro_df<-data.frame(ge=ge_values_plot,micro_fert=fert_fun(ge_values_plot))
-  p<-ggplot()+
-    geom_ribbon(data=agg,aes(x=bin_center,
-                             ymin=mean_of_mean_fert-sd_of_mean_fert,
-                             ymax=mean_of_mean_fert+sd_of_mean_fert,
-                             fill=model),alpha=0.15,color=NA)+
-    geom_line(data=agg,aes(x=bin_center,y=mean_of_mean_fert,color=model),size=1)+
-    geom_line(data=micro_df,aes(x=ge,y=micro_fert),
-              color="black",linetype="dashed",size=0.9)+
-    scale_color_viridis_d(option="D")+scale_fill_viridis_d(option="D")+
-    labs(title=eq_titles[[fname]],
-         x="Average GE",
-         y="Mean couple fertility")+
-    theme_minimal()+
-    theme(legend.position="bottom",
-          plot.title=element_text(size=12,face="bold"))
-  # remove y-axis for first and third
-  if(fname %in% c("sym_sharp","asym_lr")){
-    p <- p + theme(axis.title.y=element_blank(),
-                   axis.text.y=element_blank(),
-                   axis.ticks.y=element_blank())
+plot_list <- list()
+for (fname in names(all_results)) {
+  agg <- all_results[[fname]]$agg
+  fert_fun <- fert_funcs[[fname]]
+  micro_df <- data.frame(ge = ge_values_plot, micro_fert = fert_fun(ge_values_plot))
+  
+  p <- ggplot() +
+    geom_ribbon(
+      data = agg,
+      aes(
+        x = bin_center,
+        ymin = mean_of_mean_fert - sd_of_mean_fert,
+        ymax = mean_of_mean_fert + sd_of_mean_fert,
+        fill = model
+      ),
+      alpha = 0.15,
+      color = NA
+    ) +
+    geom_line(
+      data = agg,
+      aes(x = bin_center, y = mean_of_mean_fert, color = model),
+      size = 1
+    ) +
+    geom_line(
+      data = micro_df,
+      aes(x = ge, y = micro_fert),
+      color = "black",
+      linetype = "dashed",
+      size = 0.9
+    ) +
+    scale_color_viridis_d(option = "D") +
+    scale_fill_viridis_d(option = "D") +
+    labs(
+      title = eq_titles[[fname]],
+      x = "Average GE",
+      y = "Mean couple fertility"
+    ) +
+    theme_minimal() +
+    theme(
+      legend.position = "bottom",
+      plot.title = element_text(size = 12, face = "bold")
+    )
+  
+  # For Figure 1 and 3: keep y-axis ticks but hide label
+  if (fname %in% c("sym_sharp", "asym_lr")) {
+    p <- p + theme(axis.title.y = element_blank())
   }
-  plot_list[[fname]]<-p
+  
+  plot_list[[fname]] <- p
 }
 
 combined_plot <- (plot_list[["sym_sharp"]] / plot_list[["sym_flat"]] / plot_list[["asym_lr"]]) +
-  plot_annotation(title="")
+  plot_annotation(title = "")
 
 print(combined_plot)
-ggsave("combined_three_equations_titles.png",plot=combined_plot,width=8,height=12,dpi=300)
+ggsave("combined_three_equations_titles.png", plot = combined_plot, width = 8, height = 12, dpi = 300)
 
 # ----------------------------
 # SAVE OUTPUTS

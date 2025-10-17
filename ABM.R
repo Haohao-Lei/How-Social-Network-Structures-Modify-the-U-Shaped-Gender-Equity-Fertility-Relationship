@@ -10,6 +10,7 @@
 # Save as e.g. "abm_full_100k.R" and run: source("abm_full_100k.R")
 #
 # Author: assistant (code generated for user's ABM)
+setwd("~/Nextcloud/Documents/fertility matching")
 
 library(igraph)
 library(ggplot2)
@@ -295,33 +296,39 @@ message("Saved Figure_B_two_line.png")
 # NOTE: plotting entire 100k network is not practical; subsample nodes for plotting.
 # We'll produce two PNGs that sample up to 1000 vertices for readability.
 # ----------------------------
-plot_network_sample <- function(g, agents_df, sample_size = 1000L, title = "Network sample", file = NULL) {
-  Nlocal <- vcount(g)
-  s <- min(sample_size, Nlocal)
-  set.seed(42)
-  samp_vertices <- sort(sample(seq_len(Nlocal), s))
-  sg <- induced_subgraph(g, vids = samp_vertices)
-  ge_vals <- V(sg)$ge
-  if (is.null(ge_vals)) ge_vals <- agents_df$ge[samp_vertices]
-  col_idx <- as.numeric(cut(ge_vals, breaks = 100))
-  vcols <- viridis(100)[col_idx]
-  layout_circ <- layout_in_circle(sg)
-  png(file, width = 900, height = 900, res = 150)
-  par(mar = c(0,0,2,0))
-  plot(sg,
-       layout = layout_circ,
-       vertex.color = adjustcolor(vcols, alpha.f = 0.8),
-       vertex.size = 6,
-       vertex.label = NA,
-       vertex.frame.color = NA,
-       main = title)
-  dev.off()
-}
+# Use viridis color scale for node coloring (colorblind-friendly)
+set.seed(123)
+# For Case A:
+# Assign GE from agents_caseA to nodes of network gA (ensure the order matches)
+V(gA)$ge <- agents_caseA$ge
+vertex_colors_A <- viridis(100)[as.numeric(cut(V(gA)$ge, breaks = 100))]
 
-# Save network samples
-plot_network_sample(gA, agents_caseA, sample_size = 900L, title = "Case A: Proximity by Similarity (sample)", file = "network_caseA_sample.png")
-plot_network_sample(gB, agents_caseB, sample_size = 900L, title = "Case B: Proximity by Dissimilarity (sample)", file = "network_caseB_sample.png")
-message("Saved network sample PNGs (may be large).")
+# For Case B:
+# Assign GE from agents_caseB to nodes of network gB.
+V(gB)$ge <- agents_caseB$ge
+vertex_colors_B <- viridis(100)[as.numeric(cut(V(gB)$ge, breaks = 100))]
+
+# Set up a side-by-side plotting area with no outer margins
+par(mfrow = c(1, 2), mar = c(0, 0, 2, 0))
+
+# Plot Case A network with larger, semi-transparent nodes and no border.
+plot(gA,
+     vertex.color = adjustcolor(vertex_colors_A, alpha.f = 0.5),
+     vertex.size = 8,
+     vertex.label = NA,
+     vertex.frame.color = NA,
+     main = "Case A: Proximity by Similarity\n(Node colors = GE)")
+
+# Plot Case B network similarly.
+plot(gB,
+     vertex.color = adjustcolor(vertex_colors_B, alpha.f = 0.5),
+     vertex.size = 8,
+     vertex.label = NA,
+     vertex.frame.color = NA,
+     main = "Case B: Proximity by Dissimilarity\n(Node colors = GE)")
+
+# Reset plotting parameters
+par(mfrow = c(1, 1))
 
 # ----------------------------
 # Save pair-level csvs (optional, large files)
