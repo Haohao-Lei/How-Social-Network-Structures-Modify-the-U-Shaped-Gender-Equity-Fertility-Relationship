@@ -17,7 +17,7 @@ This repository contains an agent‑based model (ABM) and accompanying sensitivi
 
 ## Requirements
 	•	R (>= 4.0 recommended)
-	•	R packages: igraph, ggplot2, viridis, dplyr, tidyr, patchwork (install with install.packages())
+	•	R packages: igraph, ggplot2, viridis, dplyr, tidyr, patchwork
 
 ## Primary outputs
 
