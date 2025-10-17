@@ -18,3 +18,43 @@ Contents
 Requirements
 	•	R (>= 4.0 recommended)
 	•	R packages: igraph, ggplot2, viridis, dplyr, tidyr, patchwork (install with install.packages())
+
+Example:
+
+install.packages(c("igraph","ggplot2","viridis","dplyr","tidyr","patchwork"))
+
+
+⸻
+
+Quick start — run the scripts
+
+From within R (interactive):
+
+# set working directory to repo root or the folder containing the scripts
+source("ABM.R")
+# or
+source("Sensitivity analysis.R")
+
+From the shell (non‑interactive):
+
+Rscript "ABM.R"
+Rscript "Sensitivity analysis.R"
+
+
+⸻
+
+Primary outputs
+
+The scripts save the following files to the working directory:
+	•	sensitivity_results_equations.rds — full R list with per‑run and aggregated results
+	•	sensitivity_agg_equations.csv — aggregated table suitable for downstream analysis
+	•	combined_three_equations_titles.png — combined figure showing the three equations / scenarios
+
+Adjust setwd() at the top of the scripts to change output locations.
+
+⸻
+
+Parameters & computational notes
+	•	The code is designed to run large experiments (the author used N = 100000 in examples). Such runs require substantial RAM and can be time‑consuming — expect heavy graph computations and neighbourhood searches.
+	•	For exploratory work, reduce N (e.g. to 1,000–10,000) to speed up iteration.
+	•	Consider increasing R memory limits on Windows (memory.limit()), using a machine with >16 GB RAM for `
